@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>HBD มะแน้ว 💖✨</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;500&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #ff6f91;
+      --glass: rgba(255, 255, 255, 0.25);
+    }
+
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      margin: 0; padding: 0;
+      font-family: 'Kanit', sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(160deg, #ff9a9e 0%, #fecfef 50%, #ee9ca7 100%);
+      color: white;
+      overflow-x: hidden;
+      display: flex; flex-direction: column;
+      position: relative;
+    }
+
+    /* หน้าแรก */
+    .cover {
+      height: 100vh;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      text-align: center; position: fixed; width: 100%; z-index: 20;
+      background: inherit;
+      transition: opacity 0.6s ease, visibility 0.6s;
+      top: 0;
+      left: 0;
+    }
+
+    /* ส่วนจัดการรูปกระจาย (Collage) */
+    .collage-container {
+      position: relative;
+      width: 100%;
+      height: 480px;
+      margin-top: env(safe-area-inset-top);
+      display: none;
+      margin-bottom: 10px;
+    }
+
+    .photo-item {
+      position: absolute;
+      width: 145px;
+      height: 180px;
+      object-fit: cover;
+      border: 6px solid white;
+      border-bottom: 28px solid white;
+      border-radius: 4px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: 5;
+      cursor: pointer;
+    }
+
+    /* เพิ่ม sparkle ให้กับรูปภาพ */
+    .photo-item::after {
+      content: "✨";
+      position: absolute;
+      bottom: -20px;
+      right: 8px;
+      font-size: 14px;
+      opacity: 0.7;
+      text-shadow: 0 0 4px gold;
+      pointer-events: none;
+    }
+
+    .p1 { top: 10px; left: 4%; transform: rotate(-8deg); }
+    .p2 { top: 30px; right: 4%; transform: rotate(10deg); }
+    .p3 { top: 140px; left: 22%; transform: rotate(4deg); z-index: 8; }
+    .p4 { top: 180px; right: 2%; transform: rotate(-6deg); }
+    .p5 { top: 290px; left: 4%; transform: rotate(-12deg); }
+    .p6 { top: 310px; right: 6%; transform: rotate(8deg); }
+
+    .photo-item:active {
+      transform: scale(1.2) rotate(0deg) !important;
+      z-index: 100;
+      box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+    }
+
+    .content-wrapper {
+      padding: 20px;
+      display: none;
+      text-align: center;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .message-card {
+      background: var(--glass);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border-radius: 35px;
+      padding: 30px 20px;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      position: relative;
+      z-index: 10;
+      width: 100%; max-width: 350px;
+      margin: 0 auto;
+      margin-top: 10px;
+      margin-bottom: calc(20px + env(safe-area-inset-bottom));
+      transition: transform 0.3s;
+    }
+
+    .message-card:hover {
+      transform: scale(1.01);
+    }
+
+    #text-area { 
+      font-size: 16px; 
+      line-height: 1.8; 
+      text-align: left; 
+      max-height: 180px;
+      overflow-y: auto;
+      padding-right: 5px;
+    }
+    
+    #text-area::-webkit-scrollbar { width: 5px; }
+    #text-area::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.3); border-radius: 5px; }
+
+    button {
+      padding: 18px 45px; border: none; border-radius: 50px;
+      background: white; color: var(--primary);
+      font-size: 18px; font-weight: bold; cursor: pointer;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+      transition: transform 0.2s ease;
+    }
+    button:active { transform: scale(0.95); }
+
+    .floating {
+      position: fixed; pointer-events: none; z-index: 1;
+      animation: floatUp linear forwards;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(110vh); opacity: 0; }
+      10% { opacity: 0.8; }
+      100% { transform: translateY(-10vh); opacity: 0; }
+    }
+
+    .heart-beat {
+      display: inline-block;
+      animation: heartBeat 1.5s infinite cubic-bezier(0.215, 0.61, 0.355, 1);
+      color: white;
+      filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.4));
+    }
+
+    @keyframes heartBeat {
+      0% { transform: scale(1); }
+      15% { transform: scale(1.2); }
+      30% { transform: scale(1); }
+      45% { transform: scale(1.15); }
+      60% { transform: scale(1); }
+    }
+
+    .btn-glass {
+      background: rgba(255, 255, 255, 0.9) !important;
+      color: var(--primary) !important;
+      border: 2px solid white !important;
+      backdrop-filter: blur(10px);
+      letter-spacing: 1px;
+      box-shadow: 0 15px 30px rgba(255, 111, 145, 0.3) !important;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-glass::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      transition: left 0.5s;
+    }
+
+    .btn-glass:hover::before {
+      left: 100%;
+    }
+
+    .fade-up {
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeUpAnim 0.8s ease forwards;
+    }
+
+    @keyframes fadeUpAnim {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .delay-1 { animation-delay: 0.2s; }
+    .delay-2 { animation-delay: 0.5s; }
+
+    .name-glow {
+      color: #fff;
+      text-shadow: 0 0 10px rgba(255,255,255,0.8), 0 0 20px rgba(255,111,145,0.5);
+      animation: namePulse 2s infinite alternate;
+      display: inline-block;
+    }
+
+    @keyframes namePulse {
+      from { text-shadow: 0 0 10px rgba(255,255,255,0.8); }
+      to { text-shadow: 0 0 20px rgba(255,255,255,1), 0 0 30px rgba(255,111,145,0.8); transform: scale(1.05); }
+    }
+
+    /* ลูกเล่นใหม่: เอฟเฟกต์ดาวตก */
+    .shooting-star {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 2px;
+      height: 2px;
+      background: white;
+      border-radius: 50%;
+      box-shadow: 0 0 6px #fff, 0 0 12px #ffb7c5;
+      opacity: 0;
+      z-index: 999;
+      pointer-events: none;
+    }
+
+    /* เพิ่ม ripple effect สำหรับรูป */
+    @keyframes ripple {
+      0% { transform: scale(1); opacity: 0.6; }
+      100% { transform: scale(1.5); opacity: 0; }
+    }
+
+    .ripple-effect {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255,255,200,0.6);
+      pointer-events: none;
+      animation: ripple 0.6s ease-out;
+      z-index: 200;
+    }
+
+    /* sparkle รอบๆ */
+    .glint {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: gold;
+      border-radius: 50%;
+      opacity: 0;
+      animation: glintAnim 0.8s ease-out forwards;
+      pointer-events: none;
+      z-index: 1000;
+    }
+
+    @keyframes glintAnim {
+      0% { opacity: 0; transform: scale(0); }
+      50% { opacity: 1; transform: scale(1.2); }
+      100% { opacity: 0; transform: scale(0.5); }
+    }
+  </style>
+</head>
+<body>
+
+<audio id="bgMusic" loop preload="auto">
+  <source src="C:\Users\kongp\Desktop\test\Download.mp3" type="audio/mpeg">
+</audio>
+
+<div class="cover" id="cover">
+  <div class="heart-beat">
+    <i class="fa-solid fa-gift" style="font-size: 85px; margin-bottom: 30px; color: #fff; filter: drop-shadow(0 0 15px rgba(255,255,255,0.6));"></i>
+  </div>
+  
+  <div style="margin-bottom: 40px; text-align: center;">
+    <p class="fade-up delay-1" style="text-transform: uppercase; letter-spacing: 5px; font-size: 14px; opacity: 0.9; margin-bottom: 15px;">
+      — Happy Birthday —
+    </p>
+
+    <h1 class="fade-up delay-2" style="font-family: 'Playfair Display', serif; font-size: 38px; line-height: 1.4; margin: 0;">
+      <span style="font-weight: 300; font-size: 28px; opacity: 0.9;">To My Special One</span><br>
+      <span class="name-glow">" มะแน้ว "</span> 
+      <span style="display: inline-block; animation: float 3s infinite ease-in-out;">💖</span>
+    </h1>
+  </div>
+
+  <button class="btn-glass" onclick="start()">
+    ดูสิ่งที่เค้าตั้งใจทำให้นะ 
+  </button>
+</div>
+
+<div class="collage-container" id="collage">
+  <video src="1.mp4" class="photo-item p1" muted loop playsinline></video>
+  <video src="2.mp4" class="photo-item p2" muted loop playsinline></video>
+  <video src="3.mp4" class="photo-item p3" muted loop playsinline></video>
+  <video src="4.mp4" class="photo-item p4" muted loop playsinline></video>
+  <img src="5.jpg" class="photo-item p5" alt="Memory 5">
+  <img src="6.jpg" class="photo-item p6" alt="Memory 6">
+</div>
+
+<div class="content-wrapper" id="main-content">
+  <div class="message-card">
+    <h2 style="font-size: 26px; margin-top: 0;">Happy Birthday นะอ้วน !!!
+     
+    </h2>
+    <div id="text-area"></div>
+
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<script>
+const storyText = `Happy Birthday มะแน้ว 🎂💖\n\nวันนี้เป็นวันพิเศษของเธอ... ขอบคุณที่เข้ามาเป็นเรื่องราวดีๆ ในชีวิตเค้านะ\n\nขอให้ปีนี้เป็นปีที่มะแน้วมีความสุขที่สุด ยิ้มเยอะๆ สุขภาพแข็งแรง เค้าจะอยู่ข้างๆ เธอแบบนี้ไปนานๆ เลยนะ\n\nรักมะแน้วที่สุดเลย ❤️`;
+
+// ฟังก์ชั่นเพิ่มลูกเล่นใหม่: เอฟเฟกต์ดาวตก
+let shootingStarInterval;
+function startShootingStars() {
+  if (shootingStarInterval) clearInterval(shootingStarInterval);
+  shootingStarInterval = setInterval(() => {
+    const star = document.createElement('div');
+    star.classList.add('shooting-star');
+    const startX = Math.random() * window.innerWidth;
+    const startY = Math.random() * (window.innerHeight * 0.3);
+    star.style.left = startX + 'px';
+    star.style.top = startY + 'px';
+    star.style.position = 'fixed';
+    document.body.appendChild(star);
+    
+    const angle = 45 + (Math.random() * 30);
+    const distance = 300 + Math.random() * 400;
+    const rad = angle * Math.PI / 180;
+    const endX = startX + Math.cos(rad) * distance;
+    const endY = startY + Math.sin(rad) * distance;
+    
+    star.style.transition = 'all 1.2s linear';
+    star.style.opacity = '1';
+    star.style.boxShadow = '0 0 8px #ffd966';
+    
+    setTimeout(() => {
+      star.style.transform = `translate(${endX - startX}px, ${endY - startY}px)`;
+      star.style.opacity = '0';
+    }, 10);
+    
+    setTimeout(() => star.remove(), 1300);
+  }, 1800);
+}
+
+// ฟังก์ชั่นเพิ่ม sparkle เมื่อแตะรูป
+function addRippleAndGlint(e, element) {
+  const rect = element.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+  
+  const ripple = document.createElement('div');
+  ripple.classList.add('ripple-effect');
+  ripple.style.left = (rect.left + x - 20) + 'px';
+  ripple.style.top = (rect.top + y - 20) + 'px';
+  ripple.style.width = '40px';
+  ripple.style.height = '40px';
+  document.body.appendChild(ripple);
+  setTimeout(() => ripple.remove(), 600);
+  
+  for(let i=0; i<6; i++) {
+    const glint = document.createElement('div');
+    glint.classList.add('glint');
+    glint.style.left = (rect.left + x + (Math.random() - 0.5) * 40) + 'px';
+    glint.style.top = (rect.top + y + (Math.random() - 0.5) * 40) + 'px';
+    document.body.appendChild(glint);
+    setTimeout(() => glint.remove(), 800);
+  }
+  
+  canvasConfetti({ particleCount: 12, spread: 30, origin: { x: (rect.left + rect.width/2) / window.innerWidth, y: (rect.top + rect.height/2) / window.innerHeight }, colors: ['#ffb7c5', '#fff0b5'] });
+}
+
+function start() {
+  const music = document.getElementById("bgMusic");
+  music.play().catch(e => console.log("Audio needs interaction"));
+
+  const cover = document.getElementById("cover");
+  cover.style.opacity = '0';
+  cover.style.visibility = 'hidden';
+  setTimeout(() => {
+      cover.style.display = "none";
+      document.getElementById("collage").style.display = "block";
+      document.getElementById("main-content").style.display = "flex";
+      
+      document.querySelectorAll('video').forEach(v => v.play().catch(e => console.log("Video auto-play blocked")));
+
+      fireConfetti();
+      typeWriter();
+      setInterval(createFloating, 450);
+      startShootingStars();
+      
+      // เพิ่ม event ให้รูปภาพและวิดีโอทุกชิ้นแสดงเอฟเฟกต์ sparkle เมื่อแตะ
+      document.querySelectorAll('.photo-item').forEach(el => {
+        el.addEventListener('click', (e) => {
+          e.stopPropagation();
+          addRippleAndGlint(e, el);
+          // ถ้าเป็นวิดีโอให้เล่น/หยุดเพิ่มความสนุก
+          if (el.tagName === 'VIDEO') {
+            if (el.paused) el.play().catch(()=>{});
+            else el.pause();
+          }
+        });
+      });
+      
+      // เพิ่มลูกเล่น mouse move บนการ์ดข้อความให้มี sparkle เล็กๆ
+      const msgCard = document.querySelector('.message-card');
+      msgCard.addEventListener('mousemove', (e) => {
+        if(Math.random() > 0.85) {
+          const spark = document.createElement('div');
+          spark.className = 'glint';
+          spark.style.left = e.clientX + 'px';
+          spark.style.top = e.clientY + 'px';
+          document.body.appendChild(spark);
+          setTimeout(() => spark.remove(), 500);
+        }
+      });
+      
+  }, 600);
+}
+
+let i = 0;
+function typeWriter() {
+  const target = document.getElementById("text-area");
+  if (i < storyText.length) {
+    target.innerHTML += storyText.charAt(i) === "\n" ? "<br>" : storyText.charAt(i);
+    i++;
+    setTimeout(typeWriter, 55);
+  } else {
+    // เมื่อพิมพ์จบ ให้แสดง confetti ระเบิดเล็กน้อย
+    canvasConfetti({ particleCount: 80, spread: 70, origin: { y: 0.7 }, colors: ['#ff99cc', '#ffd966'] });
+  }
+}
+
+function fireConfetti() {
+  const end = Date.now() + 5500;
+  (function frame() {
+    confetti({ particleCount: 3, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#ff6f91', '#ffffff', '#ffe0b5'] });
+    confetti({ particleCount: 3, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#ff6f91', '#ffffff', '#ffc8dd'] });
+    if (Date.now() < end) requestAnimationFrame(frame);
+  }());
+  // ฉลองใหญ่พิเศษ
+  setTimeout(() => {
+    canvasConfetti({ particleCount: 180, spread: 100, origin: { y: 0.5 }, startVelocity: 20 });
+  }, 800);
+  setTimeout(() => {
+    canvasConfetti({ particleCount: 300, spread: 120, origin: { y: 0.6, x: 0.3 }, colors: ['#ffb3ba', '#ffdac1'] });
+  }, 2000);
+}
+
+function createFloating() {
+  const icons = ['fa-heart', 'fa-star', 'fa-cake-candles', 'fa-gift'];
+  const icon = document.createElement("i");
+  icon.className = `fa-solid ${icons[Math.floor(Math.random() * icons.length)]} floating`;
+  icon.style.left = Math.random() * 100 + "vw";
+  icon.style.fontSize = Math.random() * 22 + 16 + "px";
+  icon.style.color = ["#fff0e0", "#ffe0f0", "#ffb7c5"][Math.floor(Math.random()*3)];
+  icon.style.opacity = "0.7";
+  icon.style.filter = "drop-shadow(0 0 6px gold)";
+  icon.style.animationDuration = Math.random() * 3 + 4 + "s";
+  document.body.appendChild(icon);
+  setTimeout(() => icon.remove(), 6000);
+}
+
+// เพิ่มเอฟเฟกต์ให้ชื่อมะแน้วกระพริบแรงขึ้นและมี sparkle ตามเมาส์ (เฉพาะ cover แต่เพิ่มความสนุก)
+document.addEventListener('DOMContentLoaded', () => {
+  // ทำให้รูปภาพ demo ใช้ placeholder สวยงามและไม่ error (ถ้าไม่มีไฟล์จริง)
+  const imgs = document.querySelectorAll('.photo-item');
+  const fallbackImages = [
+    'C:\\Users\\kongp\\Desktop\\test\\1.mp4',
+    'C:\\Users\\kongp\\Desktop\\test\\2.mp4',
+   'C:\\Users\\kongp\\Desktop\\test\\3.mp4',
+    'C:\\Users\\kongp\\Desktop\\test\\4.mp4',
+  ];
+  let imgIndex = 0;
+  imgs.forEach(el => {
+    if(el.tagName === 'IMG' && (!el.src || el.src.includes('img'))) {
+      if(imgIndex < fallbackImages.length) el.src = fallbackImages[imgIndex++];
+      else el.src = 'https://picsum.photos/id/104/400/500';
+    }
+  });
+  
+  // วิดีโอ placeholder ถ้าไม่มีให้ใช้ตัวอย่างสวยงาม
+  const videos = document.querySelectorAll('video');
+  const videoUrls = [
+    'C:\\Users\\kongp\\Desktop\\test\\1.mp4',
+    'https://assets.mixkit.co/videos/preview/mixkit-happy-couple-laughing-together-44597-large.mp4'
+  ];
+  let vidIdx = 0;
+  videos.forEach(vid => {
+    if(!vid.src || vid.src.includes('vid')) {
+      if(vidIdx < videoUrls.length) vid.src = videoUrls[vidIdx++];
+      else vid.src = 'https://assets.mixkit.co/videos/preview/mixkit-celebratory-fireworks-1132-large.mp4';
+    }
+    vid.muted = true;
+    vid.playsInline = true;
+  });
+  
+  // เพิ่ม animation ชื่อให้มีดวงดาวลอยรอบ cover
+  const nameSpan = document.querySelector('.name-glow');
+  if(nameSpan) {
+    setInterval(() => {
+      const star = document.createElement('div');
+      star.innerHTML = '⭐';
+      star.style.position = 'fixed';
+      star.style.left = (nameSpan.getBoundingClientRect().left + Math.random() * 100) + 'px';
+      star.style.top = (nameSpan.getBoundingClientRect().top - 20 + Math.random() * 60) + 'px';
+      star.style.fontSize = '14px';
+      star.style.opacity = '0.8';
+      star.style.pointerEvents = 'none';
+      star.style.zIndex = '999';
+      star.style.animation = 'floatUp 1.5s ease-out forwards';
+      document.body.appendChild(star);
+      setTimeout(() => star.remove(), 1500);
+    }, 1200);
+  }
+  
+  // เพิ่มลูกเล่นเมื่อ hover ที่การ์ดข้อความให้ขยายนิดหน่อย
+  const card = document.querySelector('.message-card');
+  if(card) {
+    card.addEventListener('mouseenter', () => {
+      card.style.transform = 'scale(1.02)';
+      card.style.transition = '0.3s';
+    });
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = 'scale(1)';
+    });
+  }
+  
+  // เพิ่ม particle เมื่อกดปุ่ม anywhere (ยกเว้น cover)
+  document.body.addEventListener('click', (e) => {
+    if(document.getElementById('cover') && document.getElementById('cover').style.display !== 'none') return;
+    if(Math.random() > 0.7) {
+      const glitter = document.createElement('div');
+      glitter.innerHTML = '✨';
+      glitter.style.position = 'fixed';
+      glitter.style.left = e.clientX + 'px';
+      glitter.style.top = e.clientY + 'px';
+      glitter.style.fontSize = '18px';
+      glitter.style.pointerEvents = 'none';
+      glitter.style.opacity = '0.9';
+      glitter.style.zIndex = '10000';
+      glitter.style.animation = 'floatUp 0.8s ease-out forwards';
+      document.body.appendChild(glitter);
+      setTimeout(() => glitter.remove(), 800);
+    }
+  });
+});
+
+// ป้องกันการ error จากการโหลดไฟล์เสียงต้นฉบับ (ถ้า song.mp3 ไม่เจอให้เงียบ)
+const audioEl = document.getElementById('bgMusic');
+audioEl.addEventListener('error', () => {
+  console.log("ไม่พบไฟล์เพลง แต่ยังมีความรักเต็มเปี่ยม 💕");
+});
+
+</script>
+</body>
+</html>
